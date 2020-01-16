@@ -24,5 +24,22 @@ class ContactController extends Controller
                 'content' => $request->input('content')
             ]
         );
+
+        $message = "お名前:{$request->input('name')}\n\nアドレス:{$request->input('email')}\n\n問い合わせ内容:{$request->input('content')}";
+
+        $textMessageBuilder = new \LINE\LINEBot\MessageBuilder\TextMessageBuilder($message);
+
+        $httpClient = new \LINE\LINEBot\HTTPClient\CurlHTTPClient(config('services.line.channel_access_token'));
+        $bot = new \LINE\LINEBot($httpClient, ['channelSecret' => config('services.line.channel_secret')]);
+
+        $response = $bot->broadcast($textMessageBuilder);
+
+        if (isset($response) && $response->isSucceeded()) {
+            \Log::info('Line Send Succeeded!');
+        } else {
+            \Log::info('Line Send Failed!');
+            // Failed
+            echo $response->getHTTPStatus() . ' ' . $response->getRawBody();
+        }
     }
 }
