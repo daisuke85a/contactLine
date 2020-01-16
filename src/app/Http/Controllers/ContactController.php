@@ -16,7 +16,6 @@ class ContactController extends Controller
     public function store(Request $request)
     {
         // TODO: バリデーションする
-        // TODO: jsonデータを受けるようにしたほうがいいかも
         \App\Contact::create(
             [
                 'name' => $request->input('name'),
@@ -25,7 +24,7 @@ class ContactController extends Controller
             ]
         );
 
-        $message = "お名前:{$request->input('name')}\n\nアドレス:{$request->input('email')}\n\n問い合わせ内容:{$request->input('content')}";
+        $message = "【お名前】\n{$request->input('name')}\n\n【アドレス】\n{$request->input('email')}\n\n【問い合わせ内容】\n{$request->input('content')}";
 
         $textMessageBuilder = new \LINE\LINEBot\MessageBuilder\TextMessageBuilder($message);
 
